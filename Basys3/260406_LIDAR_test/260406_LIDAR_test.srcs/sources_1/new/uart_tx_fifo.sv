@@ -13,6 +13,7 @@ module uart_tx_fifo #(
     output logic tx
 );
 
+
     // ── 내부 와이어 ───────────────────────────────────
     logic [7:0] w_rdata;
     logic       w_empty;
@@ -20,16 +21,20 @@ module uart_tx_fifo #(
     logic       w_tx_done;
     logic       w_n_tx_busy;
     logic       w_n_empty;
+    logic       w_rd;
+
+    assign w_rd = ~w_tx_busy & ~w_empty;
 
     assign w_n_tx_busy = ~w_tx_busy;
-    assign w_n_empty   = ~w_empty;
+    assign w_n_empty = ~w_empty;
 
     // ── FIFO 인스턴스 ─────────────────────────────────
     FIFO u_FIFO (
         .clk  (clk),
         .reset(reset),
         .wr   (wr),
-        .rd   (w_n_tx_busy),  // ~tx_busy
+        .rd   (w_rd),  // ~tx_busy
+        // .rd   (w_n_tx_busy),  // ~tx_busy
         .wdata(wdata),
         .rdata(w_rdata),
         .full (full),
@@ -43,7 +48,8 @@ module uart_tx_fifo #(
         .clk     (clk),
         .reset   (reset),
         .tx_data (w_rdata),
-        .tx_start(w_n_empty),  // ~empty
+        .tx_start(w_rd),       // ~empty
+        // .tx_start(w_n_empty),  // ~empty
         .tx      (tx),
         .tx_done (w_tx_done),
         .tx_busy (w_tx_busy)

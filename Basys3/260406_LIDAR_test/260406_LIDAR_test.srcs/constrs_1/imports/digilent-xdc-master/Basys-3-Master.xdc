@@ -181,7 +181,18 @@ set_property IOSTANDARD LVCMOS33 [get_ports reset]
 ## PMOD JA 핀 1번 (실제 연결 핀에 맞게 변경하세요)
 set_property PACKAGE_PIN J1 [get_ports lidar_rx]
 set_property IOSTANDARD LVCMOS33 [get_ports lidar_rx]
+set_property PULLUP true [get_ports lidar_rx]
 
 ## ── PC UART TX (Basys3 온보드 USB-UART) ──────────────────
 set_property PACKAGE_PIN A18 [get_ports pc_tx]
 set_property IOSTANDARD LVCMOS33 [get_ports pc_tx]
+
+## ── LED0 ─────────────────────────────────────────────────
+set_property PACKAGE_PIN U16 [get_ports led0]
+set_property IOSTANDARD LVCMOS33 [get_ports led0]
+
+set_property PACKAGE_PIN E19 [get_ports led1]
+set_property IOSTANDARD LVCMOS33 [get_ports led1]
+
+set_property PACKAGE_PIN U19 [get_ports led2]
+set_property IOSTANDARD LVCMOS33 [get_ports led2]

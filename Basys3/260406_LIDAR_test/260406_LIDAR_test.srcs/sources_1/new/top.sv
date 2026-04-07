@@ -21,20 +21,28 @@
 // ============================================================
 
 module top (
-    input  logic clk,       // 100MHz (Basys3 W5)
-    input  logic reset,     // active HIGH (Basys3 btnC U18)
+    input logic clk,   // 100MHz (Basys3 W5)
+    input logic reset, // active HIGH (Basys3 btnC U18)
 
     // X4 Pro UART 수신 핀
-    input  logic lidar_rx,
+    input logic lidar_rx,
 
     // PC Comfort Master 송신 핀 (USB-UART)
-    output logic pc_tx
+    output logic pc_tx,
+    output logic led0,
+    output logic led1,
+    output logic led2
 );
 
     // ── 내부 와이어 ───────────────────────────────────────
+    // LED 타이머
+    logic        r_rx_seen;
+    logic        r_valid_seen;
+    logic [26:0] r_timer0;
+    logic [26:0] r_timer2;
 
     // uart_rx_fifo → lidar_parser
-    logic [7:0]  w_rx_data;
+    logic [ 7:0] w_rx_data;
     logic        w_rx_empty;
     logic        w_rx_full;
     logic        w_rx_rd;
@@ -48,18 +56,18 @@ module top (
     logic        w_checksum_err;
 
     // lidar_serializer → uart_tx_fifo
-    logic [7:0]  w_tx_wdata;
+    logic [ 7:0] w_tx_wdata;
     logic        w_tx_wr_en;
     logic        w_tx_full;
 
     // ── rx_done 생성 ──────────────────────────────────────
     // uart_rx_fifo 에서 pop 시 rx_done 펄스 생성
     // empty 하강엣지 = 새 데이터가 FIFO에서 나왔음
-    logic r_empty_d;
+    logic        r_empty_d;
 
     always_ff @(posedge clk or posedge reset) begin
         if (reset) r_empty_d <= 1'b1;
-        else       r_empty_d <= w_rx_empty;
+        else r_empty_d <= w_rx_empty;
     end
 
     // FIFO에 데이터 있으면 계속 pop
@@ -118,4 +126,47 @@ module top (
         .tx   (pc_tx)
     );
 
+    // led0 - w_rx_done 수신 감지
+    always_ff @(posedge clk or posedge reset) begin
+        if (reset) r_rx_seen <= 0;
+        else if (w_rx_done) r_rx_seen <= 1'b1;
+    end
+
+    always_ff @(posedge clk or posedge reset) begin
+        if (reset) begin
+            r_timer0 <= 0;
+            led0     <= 0;
+        end else begin
+            r_timer0 <= r_timer0 + 1;
+            if (r_timer0 == 27'd49_999_999) begin
+                r_timer0 <= 0;
+                if (r_rx_seen) led0 <= ~led0;
+            end
+        end
+    end
+
+    // led1 - 헤더 감지 (한번이라도 잡히면 켜짐)
+    always_ff @(posedge clk or posedge reset) begin
+        if (reset) led1 <= 1'b0;
+        else if (w_header_ok) led1 <= 1'b1;
+    end
+
+    // led2 - w_valid 파싱 완료 감지
+    always_ff @(posedge clk or posedge reset) begin
+        if (reset) r_valid_seen <= 0;
+        else if (w_valid) r_valid_seen <= 1'b1;
+    end
+
+    always_ff @(posedge clk or posedge reset) begin
+        if (reset) begin
+            r_timer2 <= 0;
+            led2     <= 0;
+        end else begin
+            r_timer2 <= r_timer2 + 1;
+            if (r_timer2 == 27'd49_999_999) begin
+                r_timer2 <= 0;
+                if (r_valid_seen) led2 <= ~led2;
+            end
+        end
+    end
 endmodule
