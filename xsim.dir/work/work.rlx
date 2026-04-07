@@ -2,6 +2,8 @@
 2020.2
 Nov 18 2020
 09:47:47
-C:/Xilinx/Vivado/2020.2/data/system_verilog/uvm_1.2/uvm_macros.svh,1605717275,systemVerilog,,d:/project/systemveriog_2/Final_Project/260401_Final_Project/260401_Final_Project.srcs/sources_1/new/lidar.sv,,,,uvm,C:\Xilinx\Vivado\2020.2\data\system_verilog\uvm_1.2,,,,,
+C:/Xilinx/Vivado/2020.2/data/system_verilog/uvm_1.2/uvm_macros.svh,1605717275,systemVerilog,,d:/project/systemveriog_2/Final_Project/260401_Final_Project/260401_Final_Project.srcs/sources_1/new/lidar_parser.sv,,,,uvm,C:\Xilinx\Vivado\2020.2\data\system_verilog\uvm_1.2,,,,,
 d:/project/systemveriog_2/Final_Project/260401_Final_Project/260401_Final_Project.gen/sources_1/bd/lidar_system/hdl/lidar_system_wrapper.v,1775527832,verilog,,,,lidar_system_wrapper,,,,,,,,
 d:/project/systemveriog_2/Final_Project/260401_Final_Project/260401_Final_Project.gen/sources_1/bd/lidar_system/synth/lidar_system.v,1775527784,verilog,,,,lidar_system;lidar_system_ps7_0_axi_periph_0;m00_couplers_imp_1D3U17Z;m01_couplers_imp_1AKDP4F;m02_couplers_imp_180WKRZ;s00_couplers_imp_1C6BIPO,,,,,,,,
+d:/project/systemveriog_2/Final_Project/260401_Final_Project/260401_Final_Project.srcs/sources_1/new/lidar_parser.sv,1775529284,systemVerilog,,,,lidar_parser,,uvm,C:\Xilinx\Vivado\2020.2\data\system_verilog\uvm_1.2,,,,,
+d:/project/systemveriog_2/Final_Project/260401_Final_Project/260401_Final_Project.srcs/sources_1/new/uart_rx.sv,1775529153,systemVerilog,,,,uart_rx,,uvm,C:\Xilinx\Vivado\2020.2\data\system_verilog\uvm_1.2,,,,,
