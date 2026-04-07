@@ -22,7 +22,7 @@
 
 module lidar_parser (
     input logic clk,
-    input logic rst_n,
+    input logic reset,
 
     // uart_rx 인터페이스
     input logic       rx_valid,  // 1클럭 펄스: 수신 완료
@@ -61,8 +61,8 @@ module lidar_parser (
   // -------------------------------------------------------------------------
   // FSM
   // -------------------------------------------------------------------------
-  always_ff @(posedge clk or negedge rst_n) begin
-    if (!rst_n) begin
+  always_ff @(posedge clk or posedge reset) begin
+    if (!reset) begin
       r_state       <= WAIT_BYTE0;
       r_byte0       <= 8'h00;
       r_byte1       <= 8'h00;
