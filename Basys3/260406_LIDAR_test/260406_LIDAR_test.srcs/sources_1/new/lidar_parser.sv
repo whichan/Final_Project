@@ -192,7 +192,7 @@ module lidar_parser (
 
                     // 거리 상위 바이트 → 출력
                     S_DATA_H: begin
-                        r_distance    <= {rx_data, r_dist_l};
+                        r_distance    <= {rx_data, r_dist_l} >> 2;
                         r_angle_raw   <= r_angle_accum;
                         r_angle_accum <= r_angle_accum + r_angle_step;
                         r_valid       <= 1'b1;
