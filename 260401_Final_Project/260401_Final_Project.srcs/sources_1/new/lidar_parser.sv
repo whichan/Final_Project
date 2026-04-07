@@ -40,7 +40,7 @@ module lidar_parser (
   // FSM
   // -------------------------------------------------------------------------
   always_ff @(posedge clk or posedge reset) begin
-    if (!reset) begin
+    if (reset) begin
       r_state       <= WAIT_BYTE0;
       r_byte0       <= 8'h00;
       r_byte1       <= 8'h00;
