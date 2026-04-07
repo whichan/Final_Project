@@ -1,22 +1,18 @@
 `timescale 1ns / 1ps
 
 module lidar_top (
-    input logic clk,
-    input logic reset, // active high
-
+    input  logic        clk,
+    input  logic        reset,          // active high
     // LiDAR UART 입력
-    input logic lidar1_rx,
-    input logic lidar2_rx,
-
+    input  logic        lidar1_rx,
+    input  logic        lidar2_rx,
     // 적외선 센서
-    input logic i_trigger,
-
+    input  logic        i_trigger,
     // AXI Timer 카운터값 (PS → PL)
-    input logic [31:0] timer_val,
-
+    input  logic [31:0] timer_val,
     // 최종 불량 판정 출력
-    output logic o_defect,
-    output logic o_defect_valid
+    output logic        o_defect,
+    output logic        o_defect_valid
 );
 
   // =========================================================================
