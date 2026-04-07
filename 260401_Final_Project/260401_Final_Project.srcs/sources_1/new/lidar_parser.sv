@@ -1,24 +1,4 @@
-// =============================================================================
-// lidar_parser.sv
-// RPLIDAR A1 - SCAN 모드 (0x20) 5바이트 패킷 파서
-//
-// [참고 문서] SLAMTEC RPLIDAR Interface Protocol v2.1 (Figure 4-4, 4-5)
-//
-// 패킷 구조:
-//   Byte +0: [7:2]=quality  [1]=S̄(inverted start flag)  [0]=S(start flag)
-//   Byte +1: [7:1]=angle_q6[6:0]  [0]=C(check bit, 항상 1)
-//   Byte +2: [7:0]=angle_q6[14:7]
-//   Byte +3: [7:0]=distance_q2[7:0]
-//   Byte +4: [7:0]=distance_q2[15:8]
-//
-// 실제값 변환:
-//   angle    = angle_q6 / 64.0  (degree)
-//   distance = distance_q2 / 4.0 (mm)
-//
-// 동기화 조건:
-//   Byte0: S̄ == !S  (즉 bit[1] != bit[0])
-//   Byte1: C == 1   (bit[0] == 1)
-// =============================================================================
+`timescale 1ns / 1ps
 
 module lidar_parser (
     input  logic        clk,
