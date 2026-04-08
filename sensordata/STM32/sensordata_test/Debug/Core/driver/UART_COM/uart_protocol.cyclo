@@ -1,0 +1,4 @@
+../Core/driver/UART_COM/uart_protocol.c:3:10:Proto_BuildPacket	2
+../Core/driver/UART_COM/uart_protocol.c:28:9:Proto_CRC8	2
+../Core/driver/UART_COM/uart_protocol.c:36:6:Proto_ParseReset	1
+../Core/driver/UART_COM/uart_protocol.c:43:9:Proto_ParseByte	11

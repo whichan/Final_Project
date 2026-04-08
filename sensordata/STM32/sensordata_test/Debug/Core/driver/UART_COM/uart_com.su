@@ -1,0 +1,12 @@
+../Core/driver/UART_COM/uart_com.c:24:6:UART_COM_Init	16	static
+../Core/driver/UART_COM/uart_com.c:32:9:UART_COM_TempHumid_isRxReady	4	static
+../Core/driver/UART_COM/uart_com.c:35:11:UART_COM_TempHumid_GetPacket	4	static
+../Core/driver/UART_COM/uart_com.c:40:9:UART_COM_RTC_isRxReady	4	static
+../Core/driver/UART_COM/uart_com.c:43:11:UART_COM_RTC_GetPacket	4	static
+../Core/driver/UART_COM/uart_com.c:48:9:UART_COM_FAN_isRxReady	4	static
+../Core/driver/UART_COM/uart_com.c:51:11:UART_COM_FAN_GetPacket	4	static
+../Core/driver/UART_COM/uart_com.c:57:9:UART_COM_FIRE_isRxReady	4	static
+../Core/driver/UART_COM/uart_com.c:60:11:UART_COM_FIRE_GetPacket	4	static
+../Core/driver/UART_COM/uart_com.c:71:6:UART_COM_SendPacket	24	static
+../Core/driver/UART_COM/uart_com.c:86:6:UART_COM_SendMpuData	24	static
+../Core/driver/UART_COM/uart_com.c:95:6:UART_COM_RxEventHandler	64	static
