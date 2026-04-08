@@ -207,8 +207,6 @@ begin
   dut : entity work.cordic_0
     port map (
       aclk                => aclk,
-      s_axis_cartesian_tvalid     => s_axis_cartesian_tvalid,
-      s_axis_cartesian_tdata      => s_axis_cartesian_tdata,
       s_axis_phase_tvalid     => s_axis_phase_tvalid,
       s_axis_phase_tdata      => s_axis_phase_tdata,
       m_axis_dout_tvalid  => m_axis_dout_tvalid,
@@ -369,8 +367,6 @@ begin
   -- Assign TDATA fields to aliases, for easy simulator waveform viewing
   -----------------------------------------------------------------------
 
-  s_axis_cartesian_tdata_real  <= s_axis_cartesian_tdata(15 downto 0);
-  s_axis_cartesian_tdata_imag  <= s_axis_cartesian_tdata(31 downto 16);
   s_axis_phase_tdata_real      <= s_axis_phase_tdata(15 downto 0);
 
   m_axis_dout_tdata_real       <= m_axis_dout_tdata(15 downto 0);

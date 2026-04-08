@@ -8,8 +8,6 @@ module lidar_top (
     input  logic               lidar2_rx,
     // 적외선 센서
     input  logic               i_trigger,
-    // AXI Timer 카운터값 (PS → PL)
-    input  logic        [31:0] timer_val,
     // 최종 불량 판정 출력
     output logic               o_defect,
     output logic               o_defect_valid,
@@ -19,8 +17,8 @@ module lidar_top (
     output logic signed [31:0] o_x2,
     output logic signed [31:0] o_y2,
     output logic signed [31:0] o_z2,
-    output logic signed        o_coord_valid1,
-    output logic signed        o_coord_valid2
+    output logic               o_coord_valid1,
+    output logic               o_coord_valid2
 );
 
 
@@ -73,7 +71,7 @@ module lidar_top (
 
   uart_rx #(
       .BPS(115200)
-  ) u_uart_rx1 (
+  ) U_UART_RX1 (
       .clk    (clk),
       .reset  (reset),
       .rx     (lidar1_rx),
@@ -82,7 +80,7 @@ module lidar_top (
   );
 
 
-  lidar_parser u_parser1 (
+  lidar_parser U_PARSER1 (
       .clk          (clk),
       .reset        (reset),
       .rx_valid     (w_rx_done1),
@@ -95,22 +93,27 @@ module lidar_top (
   );
 
 
-  coord_transform U_COORD1 (
-      .clk        (clk),
-      .reset      (reset),
-      .distance_q2(w_dist1),
-      .angle_q6   (w_angle1),
-      .data_valid (w_parser_valid1),
-      .timer_val  (timer_val),
-      .o_x        (w_x1),
-      .o_y        (w_y1),
-      .o_z        (w_z1),
-      .o_valid    (w_coord_valid1)
+  coord_transform #(
+      .BELT_SPEED_Q8(25600),  //1초에 몇 mm 이동하는지
+      .TIMER_FREQ(100_000_000),  //x좌표를 시간 기준으로 계산할 때 사용
+      .CORDIC_LATENCY(20)  //CORDIC IP가 sin, cos을 내보내기까지 걸리는 시간
+  ) U_COORD_TRANSFORM1 (
+      .clk(clk),
+      .reset(reset),
+      .i_trigger(i_trigger),  //적외선 센서 신호
+      .distance_q2(w_dist1),  //4배 스케일링 된 거리 데이터
+      .angle_q6(w_angle1),  //64배 스케일링 된 각도 데이터
+      .data_valid(w_parser_valid1),  //새로운 데이터 한 점이 들어왔다는 신호(라이다가 보내줌)
+      .o_x(w_x1),  // Q8 mm
+      .o_y(w_y1),  // Q8 mm
+      .o_z(w_z1),  // Q8 mm
+      .o_valid(w_coord_valid1)  //모든 CORDIC 연산이 끝났으니 이 좌표값을 읽어가도 좋다는 신호.
+      //PS가 이 신호를 읽음
   );
 
 
 
-  defect_detector u_defect1 (
+  defect_detector U_DEFECT1 (
       .clk           (clk),
       .reset         (reset),
       .i_x           (w_x1),
@@ -126,7 +129,7 @@ module lidar_top (
 
   uart_rx #(
       .BPS(115200)
-  ) u_uart_rx2 (
+  ) U_UART_RX2 (
       .clk    (clk),
       .reset  (reset),
       .rx     (lidar2_rx),
@@ -136,7 +139,7 @@ module lidar_top (
 
 
 
-  lidar_parser u_parser2 (
+  lidar_parser U_PARSER2 (
       .clk          (clk),
       .reset        (reset),
       .rx_valid     (w_rx_done2),
@@ -150,21 +153,25 @@ module lidar_top (
 
 
 
-  coord_transform u_coord2 (
-      .clk        (clk),
-      .reset      (reset),
-      .distance_q2(w_dist2),
-      .angle_q6   (w_angle2),
-      .data_valid (w_parser_valid2),
-      .timer_val  (timer_val),
-      .o_x        (w_x2),
-      .o_y        (w_y2),
-      .o_z        (w_z2),
-      .o_valid    (w_coord_valid2)
+  coord_transform #(
+      .BELT_SPEED_Q8 (25600),        //1초에 몇 mm 이동하는지
+      .TIMER_FREQ    (100_000_000),  //x좌표를 시간 기준으로 계산할 때 사용
+      .CORDIC_LATENCY(20)            //CORDIC IP가 sin, cos을 내보내기까지 걸리는 시간
+  ) U_COORD_TRANSFORM2 (
+      .clk(clk),
+      .reset(reset),
+      .i_trigger(i_trigger),  //적외선 센서 신호
+      .distance_q2(w_dist2),  //4배 스케일링 된 거리 데이터
+      .angle_q6(w_angle2),  //64배 스케일링 된 각도 데이터
+      .data_valid(w_parser_valid2),  //새로운 데이터 한 점이 들어왔다는 신호(라이다가 보내줌)
+      .o_x(w_x2),  // Q8 mm
+      .o_y(w_y2),  // Q8 mm
+      .o_z(w_z2),  // Q8 mm
+      .o_valid(w_coord_valid2)  //모든 CORDIC 연산이 끝났으니 이 좌표값을 읽어가도 좋다는 신호.
   );
 
 
-  defect_detector u_defect2 (
+  defect_detector U_DEFECT2 (
       .clk           (clk),
       .reset         (reset),
       .i_x           (w_x2),

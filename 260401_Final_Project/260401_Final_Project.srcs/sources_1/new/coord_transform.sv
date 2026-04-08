@@ -3,7 +3,7 @@
 module coord_transform #(
     parameter integer BELT_SPEED_Q8 = 25600,  //1초에 몇 mm 이동하는지
     parameter integer TIMER_FREQ = 100_000_000, //x좌표를 시간 기준으로 계산할 때 사용
-    parameter integer CORDIC_LATENCY = 16 //CORDIC IP가 sin, cos을 내보내기까지 걸리는 시간
+    parameter integer CORDIC_LATENCY = 20 //CORDIC IP가 sin, cos을 내보내기까지 걸리는 시간
 ) (
     input logic clk,
     input logic reset,
@@ -71,6 +71,7 @@ module coord_transform #(
       .m_axis_dout_tvalid (w_sincos_tvalid)
   );
 
+  //20클럭 지연
   always_ff @(posedge clk) begin
     r_dist_pipe[0]  <= r_dist_snap;
     r_timer_pipe[0] <= r_timer_snap;
@@ -96,7 +97,6 @@ module coord_transform #(
             (64'(BELT_SPEED_Q8) * 64'(r_timer_pipe[CORDIC_LATENCY-1])) / 64'(TIMER_FREQ * 256)
         );
       end
-
     end
   end
 
