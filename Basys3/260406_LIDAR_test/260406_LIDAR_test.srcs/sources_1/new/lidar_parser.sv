@@ -164,7 +164,11 @@ module lidar_parser (
                     end
 
                     S_DATA_H: begin
-                        r_distance    <= {rx_data, r_dist_l};
+                        // [수정 전]
+                        // r_distance    <= {rx_data, r_dist_l}; 
+
+                        // [수정 후] mm 단위로 보정 (0.25mm 단위를 1mm로 변환)
+                        r_distance    <= {rx_data, r_dist_l} >> 2;
                         r_angle_raw   <= r_angle_accum;
                         r_angle_accum <= r_angle_accum + r_angle_step;
                         r_valid       <= 1'b1;
