@@ -1,27 +1,75 @@
 `timescale 1ns / 1ps
 
 module lidar_top (
-    input  logic        clk,
-    input  logic        reset,          // active high
+    input  logic               clk,
+    input  logic               reset,
     // LiDAR UART 입력
-    input  logic        lidar1_rx,
-    input  logic        lidar2_rx,
+    input  logic               lidar1_rx,
+    input  logic               lidar2_rx,
     // 적외선 센서
-    input  logic        i_trigger,
+    input  logic               i_trigger,
     // AXI Timer 카운터값 (PS → PL)
-    input  logic [31:0] timer_val,
+    input  logic        [31:0] timer_val,
     // 최종 불량 판정 출력
-    output logic        o_defect,
-    output logic        o_defect_valid
+    output logic               o_defect,
+    output logic               o_defect_valid,
+    output logic signed [31:0] o_x1,
+    output logic signed [31:0] o_y1,
+    output logic signed [31:0] o_z1,
+    output logic signed [31:0] o_x2,
+    output logic signed [31:0] o_y2,
+    output logic signed [31:0] o_z2,
+    output logic signed        o_coord_valid1,
+    output logic signed        o_coord_valid2
 );
 
-  // =========================================================================
-  // LiDAR① 파이프라인
-  // =========================================================================
 
-  // --- uart_rx① ---
-  logic [7:0] w_rx_data1;
-  logic       w_rx_done1;
+  // LiDAR1
+
+  // uart_rx
+  logic [ 7:0] w_rx_data1;
+  logic        w_rx_done1;
+  // --- lidar_parser ---
+  logic [15:0] w_dist1;
+  logic [14:0] w_angle1;
+  logic [ 5:0] w_quality1;
+  logic        w_start1;
+  logic        w_parser_valid1;
+  // --- coord_transform1 ---
+  logic signed [31:0] w_x1, w_y1, w_z1;
+  logic        w_coord_valid1;
+  // --- defect_detector1 ---
+  logic        w_defect1;
+  logic        w_defect_valid1;
+  // LiDAR2 파이프라인
+
+  // --- uart_rx2 ---
+  logic [ 7:0] w_rx_data2;
+  logic        w_rx_done2;
+  // --- lidar_parser2 ---
+  logic [15:0] w_dist2;
+  logic [14:0] w_angle2;
+  logic [ 5:0] w_quality2;
+  logic        w_start2;
+  logic        w_parser_valid2;
+  // --- coord_transform2 ---
+  logic signed [31:0] w_x2, w_y2, w_z2;
+  logic w_coord_valid2;
+  // --- defect_detector② ---
+  logic w_defect2;
+  logic w_defect_valid2;
+
+
+  assign o_coord_valid1 = w_coord_valid1;
+  assign o_coord_valid2 = w_coord_valid2;
+  assign o_x1 = w_x1;
+  assign o_y1 = w_y1;
+  assign o_z1 = w_z1;
+  assign o_x2 = w_x2;
+  assign o_y2 = w_y2;
+  assign o_z2 = w_z2;
+
+
 
   uart_rx #(
       .BPS(115200)
@@ -33,12 +81,6 @@ module lidar_top (
       .rx_done(w_rx_done1)
   );
 
-  // --- lidar_parser① ---
-  logic [15:0] w_dist1;
-  logic [14:0] w_angle1;
-  logic [ 5:0] w_quality1;
-  logic        w_start1;
-  logic        w_parser_valid1;
 
   lidar_parser u_parser1 (
       .clk          (clk),
@@ -52,9 +94,6 @@ module lidar_top (
       .o_data_valid (w_parser_valid1)
   );
 
-  // --- coord_transform① ---
-  logic signed [31:0] w_x1, w_y1, w_z1;
-  logic w_coord_valid1;
 
   coord_transform U_COORD1 (
       .clk        (clk),
@@ -69,9 +108,7 @@ module lidar_top (
       .o_valid    (w_coord_valid1)
   );
 
-  // --- defect_detector① ---
-  logic w_defect1;
-  logic w_defect_valid1;
+
 
   defect_detector u_defect1 (
       .clk           (clk),
@@ -85,13 +122,7 @@ module lidar_top (
       .o_defect_valid(w_defect_valid1)
   );
 
-  // =========================================================================
-  // LiDAR② 파이프라인
-  // =========================================================================
 
-  // --- uart_rx② ---
-  logic [7:0] w_rx_data2;
-  logic       w_rx_done2;
 
   uart_rx #(
       .BPS(115200)
@@ -103,12 +134,7 @@ module lidar_top (
       .rx_done(w_rx_done2)
   );
 
-  // --- lidar_parser② ---
-  logic [15:0] w_dist2;
-  logic [14:0] w_angle2;
-  logic [ 5:0] w_quality2;
-  logic        w_start2;
-  logic        w_parser_valid2;
+
 
   lidar_parser u_parser2 (
       .clk          (clk),
@@ -122,9 +148,7 @@ module lidar_top (
       .o_data_valid (w_parser_valid2)
   );
 
-  // --- coord_transform② ---
-  logic signed [31:0] w_x2, w_y2, w_z2;
-  logic w_coord_valid2;
+
 
   coord_transform u_coord2 (
       .clk        (clk),
@@ -139,9 +163,6 @@ module lidar_top (
       .o_valid    (w_coord_valid2)
   );
 
-  // --- defect_detector② ---
-  logic w_defect2;
-  logic w_defect_valid2;
 
   defect_detector u_defect2 (
       .clk           (clk),
@@ -155,10 +176,8 @@ module lidar_top (
       .o_defect_valid(w_defect_valid2)
   );
 
-  // =========================================================================
   // 최종 불량 판정
-  // LiDAR① OR LiDAR② 중 하나라도 불량이면 최종 불량
-  // =========================================================================
+  // LiDAR1 OR LiDAR2 중 하나라도 불량이면 최종 불량
   always_ff @(posedge clk or posedge reset) begin
     if (reset) begin
       o_defect       <= 1'b0;
