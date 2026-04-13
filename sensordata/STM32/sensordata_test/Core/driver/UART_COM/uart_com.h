@@ -19,5 +19,6 @@ Packet_t* UART_COM_FAN_GetPacket();
 uint8_t UART_COM_FIRE_isRxReady();
 Packet_t* UART_COM_FIRE_GetPacket();
 
-void UART_COM_SendPacket(uint8_t cmd, uint8_t *payload, uint8_t payloadLen);
+//void UART_COM_SendPacket(uint8_t cmd, uint8_t *payload, uint8_t payloadLen);
+void UART_COM_SendPacket(UART_HandleTypeDef *huart, uint8_t cmd, uint8_t *payload, uint8_t payloadLen);
 void UART_COM_RxEventHandler(uint16_t size);

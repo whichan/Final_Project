@@ -7,32 +7,8 @@
 
 #include "mpu.h"
 
+extern UART_HandleTypeDef huart1;
 extern UART_HandleTypeDef huart2;
-
-
-//void MPU6050_Init(I2C_HandleTypeDef *hi2c) {
-//    uint8_t check, data;
-//    char logbuf[32];
-//
-//    if (HAL_I2C_Mem_Read(hi2c, MPU6050_ADDR, 0x75, 1, &check, 1, 100) != HAL_OK) {
-//        HAL_UART_Transmit(&huart2, (uint8_t*)"I2C READ ERR\r\n", 14, 100);
-//        return;
-//    }
-//
-//    sprintf(logbuf, "WHO=%02X\r\n", check);
-//    HAL_UART_Transmit(&huart2, (uint8_t*)logbuf, strlen(logbuf), 100);
-//
-//    // 👇 0x68만 체크하던 것을 제거, 무조건 Sleep 해제
-//    data = 0;
-//    HAL_StatusTypeDef ret = HAL_I2C_Mem_Write(hi2c, MPU6050_ADDR,
-//                                REG_PWR_MGMT_1, 1, &data, 1, 100);
-//    if (ret == HAL_OK) {
-//        HAL_UART_Transmit(&huart2, (uint8_t*)"Sleep OK\r\n", 10, 100);
-//    } else {
-//        HAL_UART_Transmit(&huart2, (uint8_t*)"Sleep FAIL\r\n", 12, 100);
-//    }
-//    HAL_Delay(100); // 센서 안정화 대기
-//}
 
 void MPU6050_Init(I2C_HandleTypeDef *hi2c) {
     uint8_t check, data;
@@ -64,7 +40,8 @@ void MPU6050_Read_And_Send_Z(I2C_HandleTypeDef *hi2c) {
         payload[1] = (uint8_t)(z_accel & 0xFF);
 
         // Non-blocking DMA 전송 권장
-        UART_COM_SendPacket(0x50, payload, 2);
+        UART_COM_SendPacket(&huart1, 0x50, payload, 2);
+        UART_COM_SendPacket(&huart2, 0x50, payload, 2);
     }
 }
 

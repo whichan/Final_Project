@@ -19,7 +19,6 @@ RM := rm -rf
 -include Core/driver/Button/subdir.mk
 -include Core/Startup/subdir.mk
 -include Core/Src/subdir.mk
--include Core/App/TEMP_HUMI_SVC/subdir.mk
 -include Core/App/subdir.mk
 -include objects.mk
 

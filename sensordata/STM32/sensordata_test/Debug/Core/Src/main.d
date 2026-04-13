@@ -34,17 +34,11 @@ Core/Src/main.o: ../Core/Src/main.c ../Core/Inc/main.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
- ../Core/Src/../App/ap_main.h \
- ../Core/Src/../App/TEMP_HUMI_SVC/temp_humi_svc.h \
- ../Core/Src/../App/TEMP_HUMI_SVC/../../driver/DHT11/DHT11.h \
- ../Core/Src/../App/TEMP_HUMI_SVC/../../driver/DHT11/../Delay/Delay.h \
- ../Core/Src/../App/TEMP_HUMI_SVC/../../driver/LCD/LCD.h \
- ../Core/Src/../App/TEMP_HUMI_SVC/../../driver/UART_COM/uart_com.h \
- ../Core/Src/../App/TEMP_HUMI_SVC/../../driver/UART_COM/uart_protocol.h \
- ../Core/Src/../App/../driver/MPU/mpu.h \
+ ../Core/Src/../App/ap_main.h ../Core/Src/../App/../driver/MPU/mpu.h \
  ../Core/Src/../App/../driver/MPU/../UART_COM/uart_com.h \
  ../Core/Src/../App/../driver/MPU/../UART_COM/uart_protocol.h \
  ../Core/Src/../App/../driver/DHT11/DHT11.h \
+ ../Core/Src/../App/../driver/DHT11/../Delay/Delay.h \
  ../Core/Src/../App/../driver/LCD/LCD.h \
  ../Core/Src/../App/../driver/UART_COM/uart_com.h \
  ../Core/Src/../App/../driver/UART_COM/uart_protocol.h
@@ -85,16 +79,11 @@ Core/Src/main.o: ../Core/Src/main.c ../Core/Inc/main.h \
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h:
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h:
 ../Core/Src/../App/ap_main.h:
-../Core/Src/../App/TEMP_HUMI_SVC/temp_humi_svc.h:
-../Core/Src/../App/TEMP_HUMI_SVC/../../driver/DHT11/DHT11.h:
-../Core/Src/../App/TEMP_HUMI_SVC/../../driver/DHT11/../Delay/Delay.h:
-../Core/Src/../App/TEMP_HUMI_SVC/../../driver/LCD/LCD.h:
-../Core/Src/../App/TEMP_HUMI_SVC/../../driver/UART_COM/uart_com.h:
-../Core/Src/../App/TEMP_HUMI_SVC/../../driver/UART_COM/uart_protocol.h:
 ../Core/Src/../App/../driver/MPU/mpu.h:
 ../Core/Src/../App/../driver/MPU/../UART_COM/uart_com.h:
 ../Core/Src/../App/../driver/MPU/../UART_COM/uart_protocol.h:
 ../Core/Src/../App/../driver/DHT11/DHT11.h:
+../Core/Src/../App/../driver/DHT11/../Delay/Delay.h:
 ../Core/Src/../App/../driver/LCD/LCD.h:
 ../Core/Src/../App/../driver/UART_COM/uart_com.h:
 ../Core/Src/../App/../driver/UART_COM/uart_protocol.h:

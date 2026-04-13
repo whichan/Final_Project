@@ -19,6 +19,8 @@ uint8_t s_fireRxReady = 0;
 
 uint8_t s_rxBuf[UART_RX_DMA_BUF_SIZE];
 uint8_t s_txBuf[PROTO_MAX_PKT_SIZE];
+static uint8_t s_txBuf1[PROTO_MAX_PKT_SIZE];
+static uint8_t s_txBuf2[PROTO_MAX_PKT_SIZE];
 UART_HandleTypeDef *s_huart;
 
 void UART_COM_Init(UART_HandleTypeDef *huart) {
@@ -68,28 +70,60 @@ Packet_t* UART_COM_FIRE_GetPacket() {
 //    HAL_UART_Transmit(s_huart, s_txBuf, pktLen, 1000);
 //}
 
-void UART_COM_SendPacket(uint8_t cmd, uint8_t *payload, uint8_t payloadLen) {
-    // 1. 이전 DMA 전송이 완료되었는지 확인 (Busy 체크)
-    // 1kHz 주기이므로 보통 완료되어 있겠지만, 안전을 위해 체크합니다.
-    while (HAL_UART_GetState(s_huart) == HAL_UART_STATE_BUSY_TX ||
-           HAL_UART_GetState(s_huart) == HAL_UART_STATE_BUSY_TX_RX);
+//void UART_COM_SendPacket(uint8_t cmd, uint8_t *payload, uint8_t payloadLen) {
+//    // 1. 이전 DMA 전송이 완료되었는지 확인 (Busy 체크)
+//    // 1kHz 주기이므로 보통 완료되어 있겠지만, 안전을 위해 체크합니다.
+//    while (HAL_UART_GetState(s_huart) == HAL_UART_STATE_BUSY_TX ||
+//           HAL_UART_GetState(s_huart) == HAL_UART_STATE_BUSY_TX_RX);
+//
+//    // 2. 패킷 빌드 (s_txBuf에 데이터 저장)
+//    uint16_t pktLen = Proto_BuildPacket(s_txBuf, cmd, payload, payloadLen);
+//
+//    // 3. DMA 방식으로 전송 시작
+//    // 이제 CPU는 전송 명령만 내리고 바로 다음 루틴(센서 읽기 등)으로 넘어갑니다.
+//    HAL_UART_Transmit_DMA(s_huart, s_txBuf, pktLen);
+//}
 
-    // 2. 패킷 빌드 (s_txBuf에 데이터 저장)
-    uint16_t pktLen = Proto_BuildPacket(s_txBuf, cmd, payload, payloadLen);
+void UART_COM_SendPacket(UART_HandleTypeDef *huart, uint8_t cmd, uint8_t *payload, uint8_t payloadLen) {
+    // 1. 해당 UART가 사용 중인지 체크
+//    while (HAL_UART_GetState(huart) == HAL_UART_STATE_BUSY_TX);
 
-    // 3. DMA 방식으로 전송 시작
-    // 이제 CPU는 전송 명령만 내리고 바로 다음 루틴(센서 읽기 등)으로 넘어갑니다.
-    HAL_UART_Transmit_DMA(s_huart, s_txBuf, pktLen);
+	if (HAL_UART_GetState(huart) == HAL_UART_STATE_BUSY_TX) {
+	        return;
+	    }
+
+    uint16_t pktLen;
+
+    // 2. 어느 UART 인스턴스인지에 따라 전용 버퍼를 사용합니다.
+    if (huart->Instance == USART1) {
+        pktLen = Proto_BuildPacket(s_txBuf1, cmd, payload, payloadLen);
+        HAL_UART_Transmit_DMA(huart, s_txBuf1, pktLen);
+    }
+    else if (huart->Instance == USART2) {
+        pktLen = Proto_BuildPacket(s_txBuf2, cmd, payload, payloadLen);
+        HAL_UART_Transmit_DMA(huart, s_txBuf2, pktLen);
+    }
 }
 
+
 // MPU-6050 가속도 데이터를 Basys3로 전송하는 함수 예시
+//void UART_COM_SendMpuData(int16_t z_axis) {
+//    uint8_t payload[2];
+//    payload[0] = (uint8_t)((z_axis >> 8) & 0xFF); // High Byte
+//    payload[1] = (uint8_t)(z_axis & 0xFF);        // Low Byte
+//
+//    // 기존 Proto_BuildPacket과 HAL_UART_Transmit 활용
+//    UART_COM_SendPacket(CMD_SEND_MPU_DATA, payload, 2);
+//}
+
 void UART_COM_SendMpuData(int16_t z_axis) {
     uint8_t payload[2];
     payload[0] = (uint8_t)((z_axis >> 8) & 0xFF); // High Byte
     payload[1] = (uint8_t)(z_axis & 0xFF);        // Low Byte
 
-    // 기존 Proto_BuildPacket과 HAL_UART_Transmit 활용
-    UART_COM_SendPacket(CMD_SEND_MPU_DATA, payload, 2);
+    // 핸들(&huart1)을 첫 번째 인자로 추가하세요!
+    extern UART_HandleTypeDef huart1; // huart1이 선언된 곳이 다를 수 있으니 extern 추가
+    UART_COM_SendPacket(&huart1, CMD_SEND_MPU_DATA, payload, 2);
 }
 
 void UART_COM_RxEventHandler(uint16_t size) {

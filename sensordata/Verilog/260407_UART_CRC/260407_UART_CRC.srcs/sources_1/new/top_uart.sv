@@ -1,18 +1,30 @@
 `timescale 1ns / 1ps
 
-
 module top_uart (
-    input logic clk,  // Basys3 100MHz
-    input logic rst,  // 버튼 등
-    input logic rx    // STM32 TX핀과 연결된 Basys3 RX핀 (예: J3)
+    input  logic clk,
+    input  logic rst,
+    input  logic rx,
+    output logic tx
 );
-    logic rx_done;
-    logic rx_fifo_empty;
-    logic [7:0] rx_fifo_data;
-    logic parser_rd_en;
-    logic parsed_tick;
+    logic        rx_done;
+    logic        rx_fifo_empty;
+    logic [ 7:0] rx_fifo_data;
+    logic        parser_rd_en;
+    logic        parsed_tick;
     logic [15:0] mpu_z_raw;
     logic [15:0] filtered_z;
+
+    logic        fifo_not_empty_d;
+    logic        rx_data_ready;
+    logic        parser_rd_en_d;
+
+    logic [ 7:0] w_tx_data;
+    logic        w_tx_start;
+    logic        w_tx_done;
+    logic        w_tx_busy;
+    logic        pc_rx;
+
+    assign pc_rx = rx;
 
     uart_loop_back u_uart_loop_back (
         .clk(clk),
@@ -25,24 +37,13 @@ module top_uart (
         .rx_done(rx_done)
     );
 
-    // ★ 핵심 수정: rx_data_ready를 ~empty의 1클럭 지연 pulse로 만들기
-    logic fifo_not_empty_d;  // 1클럭 지연
-    logic rx_data_ready;
-    logic parser_rd_en_d;
-
-    always_ff @(posedge clk or posedge rst) begin
-        if (rst) begin
-            fifo_not_empty_d <= 1'b0;
-            parser_rd_en_d   <= 1'b0;
-        end else begin
-            fifo_not_empty_d <= ~rx_fifo_empty;
-            parser_rd_en_d   <= parser_rd_en;
-        end
-    end
-
-    // empty였다가 not_empty가 된 순간 + rd_en 이후 다음 데이터 준비 시점
-    assign rx_data_ready = (~rx_fifo_empty) & (~fifo_not_empty_d | parser_rd_en_d);
-
+    uart_pulse u_uart_pulse (
+        .clk(clk),
+        .rst(rst),
+        .rx_fifo_empty(rx_fifo_empty),
+        .parser_rd_en(parser_rd_en),
+        .rx_data_ready(rx_data_ready)
+    );
 
     uart_packet_parser u_parser (
         .clk          (clk),
@@ -61,4 +62,41 @@ module top_uart (
         .data_valid(parsed_tick),  // 패킷 완료 신호를 FIR의 Start 신호로 사용
         .data_out(filtered_z)
     );
+
+    tx_packet u_tx_packet (
+        .clk        (clk),
+        .rst        (rst),
+        .mpu_z_raw  (mpu_z_raw),
+        .filtered_z (filtered_z),
+        .parsed_tick(parsed_tick),
+        .tx_data    (w_tx_data),
+        .tx_start   (w_tx_start),
+        .tx_done    (w_tx_done),
+        .tx_busy    (w_tx_busy)
+    );
+
+    uart_tx #(
+        .BPS(115200)
+    ) u_uart_tx (
+        .clk     (clk),
+        .reset   (rst),
+        .tx_data (w_tx_data),
+        .tx_start(w_tx_start),
+        .tx      (tx),
+        .tx_done (w_tx_done),
+        .tx_busy (w_tx_busy)
+    );
+
+    ila_0 u_debug_tool (
+        .clk   (clk),
+        .probe0(mpu_z_raw),
+        .probe1(filtered_z),
+        .probe2(parsed_tick),
+        .probe3(pc_rx),
+        .probe4(rx_fifo_empty),  // FIFO 비어있는지
+        .probe5(rx_fifo_data),   // 실제 수신 바이트 내용
+        .probe6(rx_data_ready),  // pulse 모듈 출력
+        .probe7(parser_rd_en)    // parser가 rd_en 주는지
+    );
+
 endmodule

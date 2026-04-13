@@ -34,16 +34,12 @@ Core/App/ap_main.o: ../Core/App/ap_main.c ../Core/App/ap_main.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
- ../Core/App/TEMP_HUMI_SVC/temp_humi_svc.h \
- ../Core/App/TEMP_HUMI_SVC/../../driver/DHT11/DHT11.h \
- ../Core/App/TEMP_HUMI_SVC/../../driver/DHT11/../Delay/Delay.h \
- ../Core/App/TEMP_HUMI_SVC/../../driver/LCD/LCD.h \
- ../Core/App/TEMP_HUMI_SVC/../../driver/UART_COM/uart_com.h \
- ../Core/App/TEMP_HUMI_SVC/../../driver/UART_COM/uart_protocol.h \
  ../Core/App/../driver/MPU/mpu.h \
  ../Core/App/../driver/MPU/../UART_COM/uart_com.h \
  ../Core/App/../driver/MPU/../UART_COM/uart_protocol.h \
- ../Core/App/../driver/DHT11/DHT11.h ../Core/App/../driver/LCD/LCD.h \
+ ../Core/App/../driver/DHT11/DHT11.h \
+ ../Core/App/../driver/DHT11/../Delay/Delay.h \
+ ../Core/App/../driver/LCD/LCD.h \
  ../Core/App/../driver/UART_COM/uart_com.h \
  ../Core/App/../driver/UART_COM/uart_protocol.h
 ../Core/App/ap_main.h:
@@ -82,16 +78,11 @@ Core/App/ap_main.o: ../Core/App/ap_main.c ../Core/App/ap_main.h \
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h:
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h:
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h:
-../Core/App/TEMP_HUMI_SVC/temp_humi_svc.h:
-../Core/App/TEMP_HUMI_SVC/../../driver/DHT11/DHT11.h:
-../Core/App/TEMP_HUMI_SVC/../../driver/DHT11/../Delay/Delay.h:
-../Core/App/TEMP_HUMI_SVC/../../driver/LCD/LCD.h:
-../Core/App/TEMP_HUMI_SVC/../../driver/UART_COM/uart_com.h:
-../Core/App/TEMP_HUMI_SVC/../../driver/UART_COM/uart_protocol.h:
 ../Core/App/../driver/MPU/mpu.h:
 ../Core/App/../driver/MPU/../UART_COM/uart_com.h:
 ../Core/App/../driver/MPU/../UART_COM/uart_protocol.h:
 ../Core/App/../driver/DHT11/DHT11.h:
+../Core/App/../driver/DHT11/../Delay/Delay.h:
 ../Core/App/../driver/LCD/LCD.h:
 ../Core/App/../driver/UART_COM/uart_com.h:
 ../Core/App/../driver/UART_COM/uart_protocol.h:

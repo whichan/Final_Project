@@ -22,7 +22,6 @@ C_DEPS :=
 
 # Every subdirectory with source files must be described here
 SUBDIRS := \
-Core/App/TEMP_HUMI_SVC \
 Core/App \
 Core/Src \
 Core/Startup \

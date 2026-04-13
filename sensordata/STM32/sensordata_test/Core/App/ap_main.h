@@ -1,7 +1,6 @@
 #include <stdio.h>
 
 #include "stm32f4xx_hal.h"
-#include "TEMP_HUMI_SVC/temp_humi_svc.h"
 //#include "FAN_SVC/fan_svc.h"
 #include "../driver/MPU/mpu.h"
 
