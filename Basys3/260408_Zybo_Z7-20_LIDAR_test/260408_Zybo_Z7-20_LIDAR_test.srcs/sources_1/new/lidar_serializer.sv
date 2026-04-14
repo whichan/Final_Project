@@ -73,10 +73,12 @@ module lidar_serializer (
         input [15:0] val;
         output [7:0] buf0, buf1, buf2, buf3, buf4;
         output [2:0] len;
-        logic [15:0] tmp;
-        logic [7:0] d[0:4];
-        integer i;
+        logic   [15:0] tmp;
+        logic   [15:0] q;  // 몫
+        logic   [ 7:0] d          [0:4];
+        integer        i;
         begin
+
             tmp  = val;
             d[4] = (tmp % 10) + 8'h30;
             tmp  = tmp / 10;
