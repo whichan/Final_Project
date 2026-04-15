@@ -1,0 +1,2 @@
+../Core/Driver/gpio_signal/gpio_signal.c:10:6:GPIO_Signal_Init	8	static
+../Core/Driver/gpio_signal/gpio_signal.c:14:6:GPIO_Signal_SendComplete	8	static

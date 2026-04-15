@@ -1,0 +1,4 @@
+../Core/App/ROBOT_ARM_SVC/robot_arm.c:36:13:ExecuteStep	2
+../Core/App/ROBOT_ARM_SVC/robot_arm.c:43:6:RobotArm_Init	2
+../Core/App/ROBOT_ARM_SVC/robot_arm.c:103:6:RobotArm_SetAngles	3
+../Core/App/ROBOT_ARM_SVC/robot_arm.c:112:6:RobotArm_Run	2

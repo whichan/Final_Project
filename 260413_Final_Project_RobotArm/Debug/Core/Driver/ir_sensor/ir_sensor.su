@@ -1,0 +1,4 @@
+../Core/Driver/ir_sensor/ir_sensor.c:13:6:IR_Sensor_Init	4	static
+../Core/Driver/ir_sensor/ir_sensor.c:18:9:IR_Sensor_IsDetected	4	static
+../Core/Driver/ir_sensor/ir_sensor.c:22:6:IR_Sensor_ClearFlag	4	static
+../Core/Driver/ir_sensor/ir_sensor.c:27:6:HAL_GPIO_EXTI_Callback	16	static

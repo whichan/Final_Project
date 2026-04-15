@@ -1,0 +1,3 @@
+../Core/Driver/uart_com/uart_com.c:15:6:UART_Com_Init	16	static
+../Core/Driver/uart_com/uart_com.c:19:6:UART_Com_SendStatus	88	static
+../Core/Driver/uart_com/uart_com.c:43:6:UART_Com_ReceiveAngles	136	static

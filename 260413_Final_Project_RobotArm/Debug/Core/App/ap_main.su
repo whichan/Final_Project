@@ -1,0 +1,2 @@
+../Core/App/ap_main.c:15:6:App_Init	24	static
+../Core/App/ap_main.c:32:6:App_Run	40	static
