@@ -47,3 +47,122 @@ hs_err_pid*
 # SDK/Vitis
 .metadata/
 RemoteSystemsTempFiles/
+
+# ---------------------------------------------------
+# Vitis Build Artifacts & Additional Logs
+# ---------------------------------------------------
+.analytics/
+ide.log
+**/Debug/
+**/Release/
+**/obj/
+**/_ide/
+*.gen/
+*.export_sim/
+
+# ---------------------------------------------------
+# STM32 CubeIDE / HAL (여기부터 추가된 항목입니다)
+# ---------------------------------------------------
+
+# Build Directories
+build/
+# Debug/  <- Vitis와 중복되나 명시적으로 유지
+# Release/ <- Vitis와 중복되나 명시적으로 유지
+
+# Build Output Files
+*.o
+*.d
+*.elf
+*.map
+*.hex
+*.list
+*.su
+
+# STM32CubeIDE Temporary / Workspace Files
+# .metadata/ <- 위에서 이미 선언됨
+*.tmp
+*.bak
+
+# STM32CubeMX Files
+*.ioc.backup
+*.mxproject
+
+# User Specific / Editor Files
+*.user
+*.user.*
+# *.swp, *.swo, *~ 등은 위에서 이미 선언됨
+
+# Debug Temporary Files
+*.gdb
+*.stlink
+
+# CMSIS / HAL Generated Cache
+*.cache
+
+# IDE History
+.history/
+
+# Backup / Temp Files
+*.old
+*.temp
+
+# ==========================================================
+# ⚠️ [매우 중요] STM32 협업/이동 시 주의사항
+# 아래 항목들은 다른 PC에서 원활히 구동하기 위해 
+# 반드시 Git에 포함(Track)되어야 하므로 제외 목록에서 뺐습니다.
+# ==========================================================
+# .project, .cproject, .settings/, *.launch, *.ioc 파일들은
+# 절대 ignore 하지 않아야 다른 PC에서 pull 받았을 때 바로 빌드/실행됩니다.
+
+# ==========================================================
+# 추가 ignore 항목 (Vivado/Vitis 자동생성물 보강)
+# 다른 PC에서 pull 후 재생성 가능한 파일들만 추가 제외
+# ==========================================================
+
+# Vitis / Xilinx SDK generated BSP / FSBL / platform artifacts
+**/zynq_fsbl_bsp/
+**/fsbl_bsp/
+**/standalone_bsp/
+**/bsp/
+**/ps7_cortexa9_0/
+**/microblaze_0/
+**/libsrc/
+**/platform.spr
+**/system.mss
+
+# Xilinx software workspace / generated app folders
+**/*.sdk/
+**/*.ide/
+**/.sdk/
+**/.ide/
+
+# Vivado generated IP build results
+**/*.ip_user_files/
+**/*.cache/
+**/*.runs/
+**/*.sim/
+**/.Xil/
+
+# Generated IP netlists / checkpoints / packaged outputs
+# **/*.dcp
+# **/*.xsa
+# **/*.hdf
+
+# Auto-generated boot / export artifacts
+**/export/
+**/sdk/
+**/sw/
+**/boot/
+**/fsbl/
+
+# Hardware handoff / generated board support cache
+**/hw_handoff/
+**/.hw/
+
+# ==========================================================
+# 주의
+# 아래 파일/폴더는 다른 PC에서 프로젝트를 열기 위해 필요할 수 있으므로
+# 일부러 추가하지 않음:
+# *.xpr, *.bd, *.xdc, *.v, *.sv, *.vhd, *.c, *.h
+# .project, .cproject, .settings/, *.launch, *.ioc
+# ==========================================================
